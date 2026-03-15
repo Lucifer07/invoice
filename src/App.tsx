@@ -16,6 +16,7 @@ import {
 type View = 'form' | 'preview' | 'history';
 
 function App() {
+  const year = new Date().getFullYear();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [currentInvoice, setCurrentInvoice] = useState<Invoice | null>(null);
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
@@ -251,7 +252,7 @@ function App() {
       <footer className="bg-primary text-white py-6 mt-8 sm:mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/80 text-sm sm:text-base">
-            © 2024 Invoice Generator. Dibuat dengan React & TypeScript.
+            © {year} Jayz
           </p>
         </div>
       </footer>
