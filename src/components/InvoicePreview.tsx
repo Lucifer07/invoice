@@ -11,13 +11,13 @@ interface InvoicePreviewProps {
 export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePreviewProps) => {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden" id="invoice-preview">
-      <div className="bg-primary text-white p-6">
-        <div className="flex justify-between items-start">
+      <div className="bg-primary text-white p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold">INVOICE</h1>
-            <p className="text-lg mt-2">{invoice.invoiceNumber}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">INVOICE</h1>
+            <p className="text-base sm:text-lg mt-2">{invoice.invoiceNumber}</p>
           </div>
-          <div className="text-right">
+          <div className="text-right sm:text-left no-print">
             <div className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium">
               {invoice.status.toUpperCase()}
             </div>
@@ -26,18 +26,18 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
       </div>
 
       <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between gap-6 mb-8">
+          <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Dari</h3>
             <div className="space-y-1 text-gray-700">
               <p className="font-bold">{invoice.fromCompany}</p>
-              <p>{invoice.fromEmail}</p>
-              <p>{invoice.fromPhone}</p>
-              <p className="whitespace-pre-line">{invoice.fromAddress}</p>
+              {invoice.fromEmail && <p>{invoice.fromEmail}</p>}
+              {invoice.fromPhone && <p>{invoice.fromPhone}</p>}
+              {invoice.fromAddress && <p className="whitespace-pre-line">{invoice.fromAddress}</p>}
             </div>
           </div>
 
-          <div className="text-right">
+          <div className="md:w-48 flex-shrink-0 text-right">
             <div className="mb-4">
               <p className="text-gray-600 text-sm">Tanggal</p>
               <p className="font-semibold text-gray-800">{formatDate(invoice.date)}</p>
@@ -47,15 +47,15 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
               <p className="font-semibold text-gray-800">{formatDate(invoice.dueDate)}</p>
             </div>
           </div>
+        </div>
 
-          <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">Kepada</h3>
-            <div className="space-y-1 text-gray-700">
-              <p className="font-bold">{invoice.toCompany}</p>
-              <p>{invoice.toEmail}</p>
-              <p>{invoice.toPhone}</p>
-              <p className="whitespace-pre-line">{invoice.toAddress}</p>
-            </div>
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">Kepada</h3>
+          <div className="space-y-1 text-gray-700">
+            <p className="font-bold">{invoice.toCompany}</p>
+            {invoice.toEmail && <p>{invoice.toEmail}</p>}
+            {invoice.toPhone && <p>{invoice.toPhone}</p>}
+            {invoice.toAddress && <p className="whitespace-pre-line">{invoice.toAddress}</p>}
           </div>
         </div>
 
@@ -71,7 +71,7 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
             </thead>
             <tbody>
               {invoice.items.map((item, index) => (
-                <tr key={item.id} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
+                <tr key={item.id} className={index % 2 === 0 ? 'bg-gray-50' : ''} style={{ pageBreakInside: 'avoid' }}>
                   <td className="py-3 px-4">{item.description}</td>
                   <td className="py-3 px-4 text-center">{item.quantity}</td>
                   <td className="py-3 px-4 text-right">{formatCurrency(item.unitPrice)}</td>
@@ -100,7 +100,7 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
         </div>
 
         {(invoice.bankName || invoice.accountNumber || invoice.accountName) && (
-          <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
+          <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/20" style={{ pageBreakInside: 'avoid' }}>
             <h4 className="font-semibold text-primary mb-4 flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -131,16 +131,16 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
           </div>
         )}
 
-        <div className="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
+        <div className="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500 no-print">
           <p>Dibuat: {new Date(invoice.createdAt).toLocaleString('id-ID')}</p>
           <p>Diperbarui: {new Date(invoice.updatedAt).toLocaleString('id-ID')}</p>
         </div>
 
         {onEdit && onDelete && onPrint && (
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 no-print">
             <button
               onClick={onEdit}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -149,16 +149,16 @@ export const InvoicePreview = ({ invoice, onEdit, onDelete, onPrint }: InvoicePr
             </button>
             <button
               onClick={onPrint}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium flex items-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Cetak
+              Download PDF
             </button>
             <button
               onClick={onDelete}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium flex items-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

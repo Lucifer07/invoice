@@ -51,10 +51,10 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
     if (!formData.toCompany.trim()) {
       newErrors.toCompany = 'Nama klien wajib diisi';
     }
-    if (!formData.fromEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.fromEmail)) {
+    if (formData.fromEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.fromEmail)) {
       newErrors.fromEmail = 'Email tidak valid';
     }
-    if (!formData.toEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.toEmail)) {
+    if (formData.toEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.toEmail)) {
       newErrors.toEmail = 'Email tidak valid';
     }
 
@@ -126,9 +126,9 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-primary mb-6">Informasi Invoice</h2>
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-primary mb-4 sm:mb-6">Informasi Invoice</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
@@ -177,7 +177,7 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
                 {errors.fromCompany && <p className="text-red-500 text-sm mt-1">{errors.fromCompany}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email (Opsional)</label>
                 <input
                   type="email"
                   value={formData.fromEmail}
@@ -225,7 +225,7 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
                 {errors.toCompany && <p className="text-red-500 text-sm mt-1">{errors.toCompany}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email (Opsional)</label>
                 <input
                   type="email"
                   value={formData.toEmail}
@@ -260,70 +260,70 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-primary mb-6">Detail Item</h2>
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-primary mb-4 sm:mb-6">Detail Item</h2>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 w-1/2">Deskripsi</th>
-                <th className="text-center py-3 px-4 font-semibold text-gray-700">Jumlah</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-700">Harga Satuan</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-700">Total</th>
-                <th className="text-center py-3 px-4 font-semibold text-gray-700 w-20">Aksi</th>
+                <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold text-gray-700 text-sm sm:text-base w-1/2">Deskripsi</th>
+                <th className="text-center py-2 sm:py-3 px-2 sm:px-4 font-semibold text-gray-700 text-sm sm:text-base">Jumlah</th>
+                <th className="text-right py-2 sm:py-3 px-2 sm:px-4 font-semibold text-gray-700 text-sm sm:text-base">Harga Satuan</th>
+                <th className="text-right py-2 sm:py-3 px-2 sm:px-4 font-semibold text-gray-700 text-sm sm:text-base">Total</th>
+                <th className="text-center py-2 sm:py-3 px-2 sm:px-4 font-semibold text-gray-700 text-sm sm:text-base w-20">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {formData.items.map((item, index) => (
                 <tr key={item.id} className="border-b border-gray-100">
-                  <td className="py-3 px-4">
+                  <td className="py-2 sm:py-3 px-2 sm:px-4">
                     <input
                       type="text"
                       value={item.description}
                       onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-                      className={`w-full px-3 py-2 border ${errors[`item-${index}-description`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent`}
+                      className={`w-full px-2 sm:px-3 py-2 border ${errors[`item-${index}-description`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base`}
                       placeholder="Nama produk/jasa"
                     />
                     {errors[`item-${index}-description`] && (
-                      <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-description`]}</p>
+                      <p className="text-red-500 text-xs sm:text-sm mt-1">{errors[`item-${index}-description`]}</p>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-2 sm:py-3 px-2 sm:px-4">
                     <input
                       type="number"
                       min="1"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(index, 'quantity', Number(e.target.value))}
-                      className={`w-20 px-3 py-2 border ${errors[`item-${index}-quantity`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-center`}
+                      className={`w-16 sm:w-20 px-2 sm:px-3 py-2 border ${errors[`item-${index}-quantity`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-center text-sm sm:text-base`}
                     />
                     {errors[`item-${index}-quantity`] && (
-                      <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-quantity`]}</p>
+                      <p className="text-red-500 text-xs sm:text-sm mt-1">{errors[`item-${index}-quantity`]}</p>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-2 sm:py-3 px-2 sm:px-4">
                     <input
                       type="number"
                       min="0"
                       step="0.01"
                       value={item.unitPrice}
                       onChange={(e) => handleItemChange(index, 'unitPrice', Number(e.target.value))}
-                      className={`w-32 px-3 py-2 border ${errors[`item-${index}-unitPrice`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right`}
+                      className={`w-24 sm:w-32 px-2 sm:px-3 py-2 border ${errors[`item-${index}-unitPrice`] ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right text-sm sm:text-base`}
                       placeholder="0"
                     />
                     {errors[`item-${index}-unitPrice`] && (
-                      <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-unitPrice`]}</p>
+                      <p className="text-red-500 text-xs sm:text-sm mt-1">{errors[`item-${index}-unitPrice`]}</p>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-right font-semibold text-gray-800">
+                  <td className="py-2 sm:py-3 px-2 sm:px-4 text-right font-semibold text-gray-800 text-sm sm:text-base">
                     Rp {item.total.toLocaleString('id-ID')}
                   </td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-2 sm:py-3 px-2 sm:px-4 text-center">
                     {formData.items.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeItem(index)}
-                        className="text-red-500 hover:text-red-700 font-medium"
+                        className="text-red-500 hover:text-red-700 font-medium text-xs sm:text-sm"
                       >
                         Hapus
                       </button>
@@ -338,12 +338,12 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
         <button
           type="button"
           onClick={addItem}
-          className="mt-4 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-primary hover:text-primary transition-colors"
+          className="mt-3 sm:mt-4 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-primary hover:text-primary transition-colors text-sm sm:text-base"
         >
           + Tambah Item
         </button>
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Pajak (%)</label>
             <input
@@ -353,7 +353,7 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
               step="0.01"
               value={formData.taxRate}
               onChange={(e) => handleInputChange('taxRate', Number(e.target.value))}
-              className="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-32 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
             />
           </div>
           <div>
@@ -362,24 +362,24 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
               value={formData.notes}
               onChange={(e) => handleInputChange('notes', e.target.value)}
               rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
               placeholder="Catatan tambahan untuk klien"
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-primary mb-6">Informasi Pembayaran</h2>
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-primary mb-4 sm:mb-6">Informasi Pembayaran</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nama Bank</label>
             <input
               type="text"
               value={formData.bankName}
               onChange={(e) => handleInputChange('bankName', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
               placeholder="Contoh: BCA"
             />
           </div>
@@ -389,7 +389,7 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
               type="text"
               value={formData.accountNumber}
               onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
               placeholder="Contoh: 1234567890"
             />
           </div>
@@ -399,26 +399,26 @@ export const InvoiceForm = ({ initialData, onSubmit, onSaveDraft, onCancel }: In
               type="text"
               value={formData.accountName}
               onChange={(e) => handleInputChange('accountName', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
               placeholder="Nama pemilik rekening"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+            className="w-full sm:w-auto px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
           >
             Batal
           </button>
         )}
         <button
           type="submit"
-          className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-secondary font-medium shadow-md"
+          className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-lg hover:bg-secondary font-medium shadow-md"
         >
           Simpan Invoice
         </button>

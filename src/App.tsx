@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import html2pdf from 'html2pdf.js';
 import { Invoice, InvoiceFormData } from './types/invoice';
 import { InvoiceForm } from './components/InvoiceForm';
 import { InvoicePreview } from './components/InvoicePreview';
@@ -88,37 +89,25 @@ function App() {
   const handlePrint = () => {
     const printContent = document.getElementById('invoice-preview');
     if (printContent) {
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>${currentInvoice?.invoiceNumber}</title>
-              <style>
-                body { font-family: Arial, sans-serif; padding: 20px; }
-                .bg-primary { background-color: #27106D; color: white; padding: 24px; }
-                .text-3xl { font-size: 30px; font-weight: bold; }
-                .text-lg { font-size: 18px; }
-                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-                th { background-color: #f9fafb; font-weight: 600; }
-                .text-right { text-align: right; }
-                .text-center { text-align: center; }
-                .font-bold { font-weight: bold; }
-                .border-t-2 { border-top: 2px solid #27106D; }
-                .bg-primary\\/5 { background-color: #f5f3ff; }
-                .border-primary\\/20 { border: 1px solid #6b46ff33; }
-                .grid { display: grid; }
-                .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-                .gap-4 { gap: 16px; }
-              </style>
-            </head>
-            <body>${printContent.innerHTML}</body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-      }
+      const element = printContent.cloneNode(true) as HTMLElement;
+
+      const actionButtons = element.querySelectorAll('.no-print');
+      actionButtons.forEach(button => button.remove());
+
+      const opt = {
+        margin: 10,
+        filename: `${currentInvoice?.invoiceNumber}.pdf`,
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          logging: false
+        },
+        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+      };
+
+      html2pdf().set(opt).from(element).save();
     }
   };
 
@@ -146,17 +135,17 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <nav className="bg-primary shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
+          <div className="flex flex-col sm:flex-row items-center justify-between h-auto sm:h-16 py-4 sm:py-0 gap-4 sm:gap-0">
+            <div className="flex items-center w-full sm:w-auto">
               <svg className="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span className="text-white text-xl font-bold">Invoice Generator</span>
+              <span className="text-white text-lg sm:text-xl font-bold">Invoice Generator</span>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex w-full sm:w-auto justify-center sm:justify-end space-x-2 sm:space-x-4">
               <button
                 onClick={() => setView('form')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
                   view === 'form'
                     ? 'bg-white text-primary'
                     : 'text-white hover:bg-white/10'
@@ -166,7 +155,7 @@ function App() {
               </button>
               <button
                 onClick={() => setView('history')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
                   view === 'history'
                     ? 'bg-white text-primary'
                     : 'text-white hover:bg-white/10'
@@ -179,14 +168,14 @@ function App() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {view === 'form' && (
           <div className="max-w-5xl mx-auto">
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-900">
+            <div className="mb-4 sm:mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {editingInvoice ? 'Edit Invoice' : 'Buat Invoice Baru'}
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">
                 {editingInvoice ? 'Perbarui detail invoice yang sudah ada' : 'Buat invoice profesional dalam hitungan detik'}
               </p>
             </div>
@@ -222,14 +211,14 @@ function App() {
 
         {view === 'preview' && currentInvoice && (
           <div className="max-w-5xl mx-auto">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Preview Invoice</h1>
-                <p className="text-gray-600 mt-2">Periksa invoice Anda sebelum mengirim atau mencetak</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Preview Invoice</h1>
+                <p className="text-gray-600 mt-2 text-sm sm:text-base">Periksa invoice Anda sebelum mengirim atau mencetak</p>
               </div>
               <button
                 onClick={() => setView('form')}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary font-medium"
+                className="w-full sm:w-auto px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary font-medium"
               >
                 Buat Invoice Baru
               </button>
@@ -245,9 +234,9 @@ function App() {
 
         {view === 'history' && (
           <div className="max-w-6xl mx-auto">
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-900">Riwayat Invoice</h1>
-              <p className="text-gray-600 mt-2">Kelola semua invoice yang telah Anda buat</p>
+            <div className="mb-4 sm:mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Riwayat Invoice</h1>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">Kelola semua invoice yang telah Anda buat</p>
             </div>
             <InvoiceHistory
               invoices={invoices}
@@ -259,9 +248,9 @@ function App() {
         )}
       </main>
 
-      <footer className="bg-primary text-white py-6 mt-12">
+      <footer className="bg-primary text-white py-6 mt-8 sm:mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80">
+          <p className="text-white/80 text-sm sm:text-base">
             © 2024 Invoice Generator. Dibuat dengan React & TypeScript.
           </p>
         </div>

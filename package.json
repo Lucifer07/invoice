@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "html2pdf.js": "^0.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

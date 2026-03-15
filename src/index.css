@@ -27,12 +27,41 @@ body {
 
 @media print {
   nav,
-  button {
+  button,
+  .no-print {
     display: none !important;
   }
-  
+
   #invoice-preview {
     box-shadow: none !important;
     border: none !important;
+  }
+
+  #invoice-preview * {
+    font-size: 12px !important;
+  }
+
+  #invoice-preview h1,
+  #invoice-preview h2,
+  #invoice-preview h3,
+  #invoice-preview h4 {
+    font-size: 12px !important;
+  }
+
+  #invoice-preview .font-bold,
+  #invoice-preview .font-semibold {
+    font-size: 12px !important;
+  }
+
+  .mb-8 {
+    page-break-inside: avoid;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
   }
 }
